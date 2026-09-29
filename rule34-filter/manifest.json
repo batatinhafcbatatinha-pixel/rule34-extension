@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Rule34 Filter",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "Oculta posts com palavras indesejadas no rule34.xxx.",
   "permissions": ["storage"],
   "action": {"default_popup": "popup.html", "default_title": "Rule34 Filter"},

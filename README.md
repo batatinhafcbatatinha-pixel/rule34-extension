@@ -6,6 +6,12 @@ Os 21 filtros anteriores continuam selecionados por padrão. Futa (tags `futa` e
 
 As tags são comparadas por inteiro, sem diferenciar maiúsculas de minúsculas, nos atributos `title` e `alt` das miniaturas `span.thumb`. Por exemplo, `pee` não bloqueia `speed`. Posts sem essas tags não são classificados por imagem. As preferências ficam no armazenamento local do navegador; não há envio de dados nem sincronização entre navegadores.
 
+## Adicionar seus próprios filtros
+
+No popup, digite a tag em **Adicionar filtro** e clique em **Adicionar** (ou pressione Enter). Use uma tag por vez, com até 100 caracteres; espaços são convertidos em `_` e letras em minúsculas. Por exemplo, `Minha Tag` vira `minha_tag`.
+
+O filtro aparece na lista já marcado e passa a ocultar os posts com essa tag quando a filtragem estiver ativada. Ele fica salvo mesmo após fechar o navegador e também aparece na pesquisa. Para parar de bloquear essa tag, desmarque seu checkbox. Tags repetidas, inclusive as já incluídas nos filtros padrão, não são adicionadas novamente.
+
 ## Chrome, Edge, Brave, Opera e Vivaldi (desktop)
 
 1. Extraia `rule34-filter-v3.zip` para uma pasta permanente, ou use a pasta `rule34-filter` deste projeto.

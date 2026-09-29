@@ -16,6 +16,14 @@
       <input id="enabled" type="checkbox" role="switch" disabled>
     </label>
     <p class="hint">Marque as tags dos posts que você quer ocultar.</p>
+    <form id="add-filter-form">
+      <label class="search-label" for="custom-tag">Adicionar filtro</label>
+      <div class="add-filter-row">
+        <input id="custom-tag" type="text" placeholder="Ex.: uma_tag" maxlength="100" required autocomplete="off" aria-describedby="custom-help" disabled>
+        <button id="add-filter" type="submit" disabled>Adicionar</button>
+      </div>
+      <p id="custom-help">Uma tag por vez. Espaços viram _.</p>
+    </form>
     <label class="search-label" for="search">Pesquisar filtros</label>
     <input id="search" type="search" placeholder="Busque uma tag…" autocomplete="off">
     <div class="list-heading"><h2>Filtros</h2><span id="count"></span></div>
