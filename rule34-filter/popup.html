@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rule34 Filter</title>
+  <link rel="stylesheet" href="popup.css">
+  <script src="settings.js" defer></script>
+  <script src="popup.js" defer></script>
+</head>
+<body>
+  <header><span class="eyebrow">SEU FEED, SUAS ESCOLHAS</span><h1>Rule34 Filter</h1></header>
+  <main>
+    <label class="power" for="enabled">
+      <span><strong>Filtragem</strong><span id="power-status">Carregando…</span></span>
+      <input id="enabled" type="checkbox" role="switch" disabled>
+    </label>
+    <p class="hint">Marque as tags dos posts que você quer ocultar.</p>
+    <label class="search-label" for="search">Pesquisar filtros</label>
+    <input id="search" type="search" placeholder="Busque uma tag…" autocomplete="off">
+    <div class="list-heading"><h2>Filtros</h2><span id="count"></span></div>
+    <fieldset id="filters" disabled><legend class="sr-only">Tags para ocultar</legend><div id="filter-list"></div></fieldset>
+    <p id="empty" hidden>Nenhum filtro encontrado.</p>
+    <p id="status" role="status" aria-live="polite">Carregando preferências…</p>
+  </main>
+  <footer>As escolhas ficam salvas neste navegador.</footer>
+</body>
+</html>
