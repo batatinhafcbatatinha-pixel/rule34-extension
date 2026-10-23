@@ -4,7 +4,7 @@ Extensão com popup em português para ativar/desativar a filtragem, pesquisar a
 
 Os 21 filtros anteriores continuam selecionados por padrão. Futa (tags `futa` e `futanari`) e Blacked (tag `blacked`) estão disponíveis para seleção. A busca procura opções na lista, sem alterar as seleções. Desativar a filtragem preserva as escolhas e restaura os posts ocultados pela extensão.
 
-As tags são comparadas por inteiro, sem diferenciar maiúsculas de minúsculas, nos atributos `title` e `alt` das miniaturas `span.thumb`. Por exemplo, `pee` não bloqueia `speed`. Posts sem essas tags não são classificados por imagem. As preferências ficam no armazenamento local do navegador; não há envio de dados nem sincronização entre navegadores.
+As tags são comparadas por inteiro, sem diferenciar maiúsculas de minúsculas, nos atributos `title` e `alt` das imagens dentro de `.thumb` e das imagens `img.preview`, mesmo fora de `span.thumb`. Por exemplo, `pee` não bloqueia `speed`. Posts sem essas tags não são classificados por imagem. As preferências ficam no armazenamento local do navegador; não há envio de dados nem sincronização entre navegadores.
 
 ## Adicionar seus próprios filtros
 

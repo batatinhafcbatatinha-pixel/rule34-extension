@@ -73,8 +73,12 @@ test('content restores posts, updates open pages and handles dynamic tags', asyn
   let observer;
   const makeThumb = title => ({
     title, hidden: false,
-    querySelector() { return { getAttribute: name => name === 'title' ? this.title : '' }; },
-    classList: { toggle(name, hidden) { this.owner.hidden = hidden; } }
+    closest() { return this; },
+    getAttribute(name) { return name === 'title' ? this.title : ''; },
+    classList: {
+      toggle(name, hidden) { this.owner.hidden = hidden; },
+      remove() { this.owner.hidden = false; }
+    }
   });
   const thumbs = [makeThumb('dog'), makeThumb('dogma')];
   thumbs.forEach(t => { t.classList.owner = t; });
@@ -104,6 +108,40 @@ test('content restores posts, updates open pages and handles dynamic tags', asyn
   await settings.write({ enabled: false, customFilters: ['custom_tag'], selected: ['custom:custom_tag'] });
   await flush();
   assert.equal(thumbs[0].hidden, false);
+});
+
+test('preview outside span.thumb blocks reported tags and restores removed targets', async () => {
+  const { context, settings } = setup('browser');
+  let observer;
+  const target = () => ({ hidden: false, classList: {
+    toggle(name, hidden) { this.owner.hidden = hidden; },
+    remove() { this.owner.hidden = false; }
+  } });
+  const link = target();
+  const image = target();
+  for (const item of [link, image]) item.classList.owner = item;
+  let linked = true;
+  image.closest = selector => selector === 'a' && linked ? link : null;
+  image.getAttribute = name => name === 'alt' ? '2boys anthro canine gay male male/male male_only wolf yaoi' : '';
+  context.document = { documentElement: {}, querySelectorAll(selector) {
+    assert.equal(selector, '.thumb img, img.preview');
+    return [image];
+  } };
+  context.MutationObserver = class { constructor(fn) { observer = fn; } observe() {} };
+  vm.runInContext(source('content.js'), context);
+  await flush();
+  assert.equal(link.hidden, true);
+  await settings.write({ customFilters: ['wolf'], selected: ['custom:wolf'] });
+  await flush();
+  assert.equal(link.hidden, true);
+  linked = false;
+  observer();
+  await flush();
+  assert.equal(link.hidden, false);
+  assert.equal(image.hidden, true);
+  await settings.write({ enabled: false, selected: ['gay'] });
+  await flush();
+  assert.equal(image.hidden, false);
 });
 
 test('popup searches aliases, saves hidden selections and rolls back failed writes', async () => {
