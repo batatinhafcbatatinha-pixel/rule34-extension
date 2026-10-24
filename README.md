@@ -46,3 +46,5 @@ Navegadores que não aceitam WebExtensions, versões antigas e navegadores móve
 ## Verificação
 
 Execute `node --test tests/extension.test.cjs`. Os testes verificam armazenamento nos dois modelos de API (`chrome` e `browser`), correspondência das tags, restauração dos posts, alterações dinâmicas, pesquisa do popup e erros ao salvar usando simulações das APIs e do DOM. Não substituem testes em navegadores reais.
+
+Na versão 3.1.2, a regra de ocultação também se aplica diretamente às imagens dentro do elemento bloqueado. Isso evita miniaturas visíveis quando os estilos da página mantêm o contêiner exibido. Verificado manualmente no Chrome na listagem `shrek_(series)`: as miniaturas dos posts `13216944` e `13213200` desaparecem ao ativar a filtragem e reaparecem ao desativá-la, sem recarregar a página.

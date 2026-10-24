@@ -1,1 +1,3 @@
-.rule34-filter-hidden { display: none !important; }
+/* Também oculta a imagem quando estilos da página mantêm o contêiner visível. */
+.rule34-filter-hidden,
+.rule34-filter-hidden img { display: none !important; }
