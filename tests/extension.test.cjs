@@ -6,6 +6,15 @@ const path = require('node:path');
 const root = path.join(__dirname, '..', 'rule34-filter');
 const source = file => fs.readFileSync(path.join(root, file), 'utf8');
 const flush = () => new Promise(resolve => setTimeout(resolve, 15));
+function makeStyle() {
+  const properties = new Map();
+  return {
+    getPropertyValue: name => properties.get(name)?.value || '',
+    getPropertyPriority: name => properties.get(name)?.priority || '',
+    setProperty: (name, value, priority = '') => properties.set(name, { value, priority }),
+    removeProperty: name => properties.delete(name)
+  };
+}
 
 function setup(namespace) {
   let data = {};
@@ -72,7 +81,7 @@ test('content restores posts, updates open pages and handles dynamic tags', asyn
   const { context, settings } = setup('browser');
   let observer;
   const makeThumb = title => ({
-    title, hidden: false,
+    title, hidden: false, style: makeStyle(),
     closest() { return this; },
     getAttribute(name) { return name === 'title' ? this.title : ''; },
     classList: {
@@ -82,15 +91,24 @@ test('content restores posts, updates open pages and handles dynamic tags', asyn
   });
   const thumbs = [makeThumb('dog'), makeThumb('dogma')];
   thumbs.forEach(t => { t.classList.owner = t; });
+  thumbs[0].style.setProperty('display', 'inline-flex', 'important');
   context.document = { documentElement: {}, querySelectorAll: () => thumbs };
   context.MutationObserver = class { constructor(fn) { observer = fn; } observe() {} };
   vm.runInContext(source('content.js'), context);
   await flush();
   assert.equal(thumbs[0].hidden, true);
+  assert.equal(thumbs[0].style.getPropertyValue('display'), 'none');
+  assert.equal(thumbs[0].style.getPropertyPriority('display'), 'important');
+  thumbs[0].style.setProperty('display', 'inline-flex', 'important');
+  observer();
+  await flush();
+  assert.equal(thumbs[0].style.getPropertyValue('display'), 'none');
   assert.equal(thumbs[1].hidden, false);
   await settings.write({ enabled: false, selected: ['dog'] });
   await flush();
   assert.equal(thumbs[0].hidden, false);
+  assert.equal(thumbs[0].style.getPropertyValue('display'), 'inline-flex');
+  assert.equal(thumbs[0].style.getPropertyPriority('display'), 'important');
   await settings.write({ enabled: true, selected: ['dog'] });
   await flush();
   assert.equal(thumbs[0].hidden, true);
@@ -113,7 +131,7 @@ test('content restores posts, updates open pages and handles dynamic tags', asyn
 test('preview outside span.thumb blocks reported tags and restores removed targets', async () => {
   const { context, settings } = setup('browser');
   let observer;
-  const target = () => ({ hidden: false, classList: {
+  const target = () => ({ hidden: false, style: makeStyle(), classList: {
     toggle(name, hidden) { this.owner.hidden = hidden; },
     remove() { this.owner.hidden = false; }
   } });

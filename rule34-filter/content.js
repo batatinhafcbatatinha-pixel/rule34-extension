@@ -5,7 +5,16 @@
   let revision = 0;
   let pending = false;
   const hiddenClass = 'rule34-filter-hidden';
-  const hiddenElements = new Set();
+  const hiddenElements = new Map();
+  function restore(element) {
+    const original = hiddenElements.get(element);
+    if (original) {
+      if (original.value) element.style.setProperty('display', original.value, original.priority);
+      else element.style.removeProperty('display');
+    }
+    element.classList.remove(hiddenClass);
+    hiddenElements.delete(element);
+  }
   function applyFilters() {
     pending = false;
     if (!ready) return;
@@ -16,17 +25,23 @@
       const text = `${img.getAttribute('title') || ''} ${img.getAttribute('alt') || ''}`;
       targets.set(target, (targets.get(target) || false) || matches(text, tags));
     });
-    hiddenElements.forEach(element => {
+    hiddenElements.forEach((original, element) => {
       if (!targets.has(element)) {
-        element.classList.remove(hiddenClass);
-        hiddenElements.delete(element);
+        restore(element);
       }
     });
     targets.forEach((blocked, target) => {
       const hidden = settings.enabled && blocked;
-      target.classList.toggle(hiddenClass, hidden);
-      if (hidden) hiddenElements.add(target);
-      else hiddenElements.delete(target);
+      if (hidden) {
+        if (!hiddenElements.has(target)) hiddenElements.set(target, {
+          value: target.style.getPropertyValue('display'),
+          priority: target.style.getPropertyPriority('display')
+        });
+        target.classList.toggle(hiddenClass, true);
+        if (target.style.getPropertyValue('display') !== 'none' || target.style.getPropertyPriority('display') !== 'important') {
+          target.style.setProperty('display', 'none', 'important');
+        }
+      } else if (hiddenElements.has(target)) restore(target);
     });
   }
   function schedule() {
@@ -52,6 +67,6 @@
     subtree: true,
     childList: true,
     attributes: true,
-    attributeFilter: ['title', 'alt']
+    attributeFilter: ['title', 'alt', 'style']
   });
 })();
